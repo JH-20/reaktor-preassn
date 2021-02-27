@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reaktor preassignment</title>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        display: none;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h1>Here be the stuff</h1>
+    <p>Loading/reloading this page may be slow because Reaktors availability API takes anywhere from 10 to 60 seconds to respond properly.</p><br>
+    <% const categories = ['beanies', 'gloves', 'facemasks'] %>
+    <div id="buttons">
+      <% categories.forEach(c => { %>
+        <button onclick="viewCategory('<%= c %>')">View <%= c %></button>
+      <% }) %>
+    </div>
+
+    <p id="loading">Loading data from Reaktors API...</p>
+
+    <div id="table-area">
+      <% categories.forEach(c => { %>
+        <table id="content-table-<%= c %>">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Manufacturer</th>
+            <th>Availability</th>
+            <th>Category</th>
+          </tr>
+        </table>
+      <% }) %>
+    </div>
+
+    
+
+    <script>
+      const viewCategory = (c) => {
+        ['beanies', 'gloves', 'facemasks'].forEach(cc => {
+          const table = document.getElementById("content-table-"+cc)
+          if (c === cc) {
+            table.style.display = "block"
+          } else {
+            table.style.display = "none"
+          }
+        })
+      }
+      const populate = (d) => {
+        console.log(d)
+        document.getElementById("loading").style.display = "none"
+        document.getElementById("buttons").style.display = "block"
+        for (const [category, products] of Object.entries(d)) {
+          const table = document.getElementById("content-table-"+category)
+          for (const [id, p] of Object.entries(products)) {
+            const row = table.insertRow(-1);
+            row.insertCell(0).innerHTML = p.id
+            row.insertCell(1).innerHTML = p.name
+            row.insertCell(2).innerHTML = p.manufacturer
+            row.insertCell(3).innerHTML = p.availability
+            row.insertCell(4).innerHTML = category
+          }
+        }
+      }
+
+      const loadData = async() => {
+        document.getElementById("loading").style.display = "block"
+        document.getElementById("buttons").style.display = "none"
+        fetch("/api/products").then(r => r.json()).then(d => populate(d))
+      }
+      loadData()
+    </script>
+
+  </body>
+</html>
