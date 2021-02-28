@@ -8,16 +8,20 @@ The front-end is really scuffed because I was more interested in solving the bac
 
 I also wanted to keep things appropriately light for a simple task like this, so I decided to just use Deno and create a simple single-page-app.
 
+The site take a few seconds to load when the server is starting up, because it loads the data from Reaktors API, and that can take anywhere from 10 to 60 seconds before the legacy API answers properly.
+
 ## The app is running here:
 
 https://r-preassn.herokuapp.com/
 
 
 ### A few comments from me:
-The app fetches the data from Reaktors API every 5 minutes, since that's how often the cache gets refreshed there.
+The server fetches the data from Reaktors API every 5 minutes, since that's how often the cache gets refreshed there. It can then be retrieved from my own API.
 
-I decided to create my own API in /api/products to work around CORS. This was before I came up with my final solution, and is just a relic of the past now. I still decided to fetch the data in a client-side script from my own API as a little practise for myself.
+I decided to create my own API in /api/products to work around CORS. This was before I came up with my final solution, and is just a relic of the past now. I still decided to fetch the data in a client-side script from my own API as a little practise for myself, and to make the page just a bit faster to load.
 
-There is a unused file called "incomplete-solution-with-then-chain.js". That's where I tried to solve the problem with promises and .then() chaining, but I was not satisfied with the code. I then decided to create the solution with async/await which, in my opinion, is way prettier.
+Initially I didn't want to store the provided data locally, as I thought that would go against the spirit of the problem, but I then decided to do so anyway after I realised how awfully slow the provided API is.
+
+There is a unused file called "incomplete-solution-with-then-chain.js". That's where I tried to solve the problem with .then() chaining, but I was not satisfied with the code. I then decided to create the solution with async/await which, in my opinion, is way prettier.
 
 There are some minor details in the code that I could refactor to look prettier, but it's good to know when to put the pen down.
