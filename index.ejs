@@ -26,15 +26,16 @@
   <body>
 
     <h1>Here be the stuff</h1>
-    <p>Loading/reloading this page may be slow because Reaktors availability API takes anywhere from 10 to 60 seconds to respond properly.</p><br>
+    <p>This site updates its data every 5 mins</p><br>
     <% const categories = ['beanies', 'gloves', 'facemasks'] %>
+
     <div id="buttons">
       <% categories.forEach(c => { %>
         <button onclick="viewCategory('<%= c %>')">View <%= c %></button>
       <% }) %>
     </div>
 
-    <p id="loading">Loading data from Reaktors API...</p>
+    <p id="loading">Loading data...</p>
 
     <div id="table-area">
       <% categories.forEach(c => { %>
@@ -44,7 +45,7 @@
             <th>Name</th>
             <th>Manufacturer</th>
             <th>Availability</th>
-            <th>Category</th>
+            <th>Type</th>
           </tr>
         </table>
       <% }) %>
@@ -53,29 +54,28 @@
     
 
     <script>
-      const viewCategory = (c) => {
-        ['beanies', 'gloves', 'facemasks'].forEach(cc => {
-          const table = document.getElementById("content-table-"+cc)
-          if (c === cc) {
+      const viewCategory = (category) => {
+        ['beanies', 'gloves', 'facemasks'].forEach(c => {
+          const table = document.getElementById("content-table-"+c)
+          if (category === c) {
             table.style.display = "block"
           } else {
             table.style.display = "none"
           }
         })
       }
-      const populate = (d) => {
-        console.log(d)
+      const populateTables = (data) => {
         document.getElementById("loading").style.display = "none"
         document.getElementById("buttons").style.display = "block"
-        for (const [category, products] of Object.entries(d)) {
+        for (const [category, products] of Object.entries(data)) {
           const table = document.getElementById("content-table-"+category)
-          for (const [id, p] of Object.entries(products)) {
+          for (const [id, product] of Object.entries(products)) {
             const row = table.insertRow(-1);
-            row.insertCell(0).innerHTML = p.id
-            row.insertCell(1).innerHTML = p.name
-            row.insertCell(2).innerHTML = p.manufacturer
-            row.insertCell(3).innerHTML = p.availability
-            row.insertCell(4).innerHTML = category
+            row.insertCell(0).innerHTML = product.id
+            row.insertCell(1).innerHTML = product.name
+            row.insertCell(2).innerHTML = product.manufacturer
+            row.insertCell(3).innerHTML = product.availability
+            row.insertCell(4).innerHTML = product.type
           }
         }
       }
@@ -83,7 +83,7 @@
       const loadData = async() => {
         document.getElementById("loading").style.display = "block"
         document.getElementById("buttons").style.display = "none"
-        fetch("/api/products").then(r => r.json()).then(d => populate(d))
+        fetch("/api/products").then(r => r.json()).then(d => populateTables(d))
       }
       loadData()
     </script>
