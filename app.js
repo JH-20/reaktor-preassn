@@ -26,7 +26,7 @@ const updateData = async() => {
 	product_data = await getData()
 	setTimeout(updateData, 5*60*1000) // Update local data every 5 mins
 }
-await updateData()
+updateData()
 
 const data_api = async ({response}) => {
 	try{

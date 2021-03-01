@@ -26,7 +26,10 @@
   <body>
 
     <h1>Here be the stuff</h1>
-    <p>This site updates its data every 5 mins</p><br>
+    <p>This site updates its data every 5 mins. If the tables are empty, try reloading the page.</p>
+    <p>The server may not have gotten the initial data form the legacy API yet. This usually takes 10 to 60 seconds after the server is booted up.</p>
+    <p>If the availability is undefined, the legacy API was unable to provide that data in 5 tries of fetching.</p>
+    <br>
     <% const categories = ['beanies', 'gloves', 'facemasks'] %>
 
     <div id="buttons">
