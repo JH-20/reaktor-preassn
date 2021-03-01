@@ -8,7 +8,9 @@ The front-end is really scuffed because I was more interested in solving the bac
 
 I also wanted to keep things appropriately light for a simple task like this, so I decided to just use Deno and create a simple single-page-app.
 
-The site take a few seconds to load when the server is starting up, because it loads the data from Reaktors API, and that can take anywhere from 10 to 60 seconds before the legacy API answers properly.
+It takes a while for the server to start up, because it loads the data from Reaktors API which can take anywhere from 10 to 60 seconds before the legacy API answers properly.
+
+NOTE: After submitting this assignment on 28.2. I then tried my app again the next day. The legacy API had a new bug where it would send an empty body as a response to the API call. Previously the only bug I encountered was when the API returned an object like this {code: 200, response: '[]'} instead of the correct data. I then updated my app to not crash no matter what the /v2/availability API sends me.
 
 ## The app is running here:
 

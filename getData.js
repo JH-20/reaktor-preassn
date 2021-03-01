@@ -25,32 +25,38 @@ const getManufacturers = (productData) => {
     return manufacturers
 }
 
+const fetchAvaiabilityArray = async(manufacturer) => {
+    var tries = 0
+    while (tries < 5) {
+        try {
+            var r = await fetch("https://bad-api-assignment.reaktor.com/v2/availability/"+manufacturer)
+            var j = await r.json()
+            var response = j.response
+            if (response instanceof Array) {
+                return response
+            } else {
+                throw "Response was not an array"
+            }
+        } catch(e) {
+            console.log("---")
+            console.log("Error encountered when fetching availability for: "+manufacturer)
+            console.log(e)
+            console.log("Trying again")
+            console.log("---")
+        }
+        tries += 1
+    }
+
+    console.log("Failed fetching availability for "+manufacturer+" 5 times. Returning an empty array")
+    return []
+}
+
 const getAvailability = async(manufacturer) => {
     const startTime = new Date()
     console.log("Fetching availability for: '"+manufacturer+"'")
-    var r = await fetch("https://bad-api-assignment.reaktor.com/v2/availability/"+manufacturer)
-    var j = await r.json()
-    var response = j.response
-    if ( !(response instanceof Array) ) {
-        // Encountered the API bug where response is string '[]' instead of an array
-        // Try again to get valid data
-        console.log("Encountered API bug with manufacturer: "+manufacturer)
-        var tries = 0
-        while (!(response instanceof Array) && tries < 5) {
-            tries += 1
-            console.log("Trying to fetch availability for "+manufacturer+" again. Try: "+tries)
-            r = await fetch("https://bad-api-assignment.reaktor.com/v2/availability/"+manufacturer)
-            j = await r.json()
-            response = j.response
-        }
-        // If response is still '[]' after 5 tries, move forward with an empty response array
-        if (!(response instanceof Array)) {
-            response = []
-        }
-    }
-    // Change availability into a dictionary that maps [product id => availability data]
+    const availabilityArray = await fetchAvaiabilityArray(manufacturer)
     const availabilities = {}
-    for (const productInfo of response) {
+    for (const productInfo of availabilityArray) {
         const info = productInfo.DATAPAYLOAD.split("INSTOCKVALUE")[1].slice(1,-2) // Parse relevant information from DATAPAYLOAD
         availabilities[productInfo.id.toLowerCase()] = info
     }
